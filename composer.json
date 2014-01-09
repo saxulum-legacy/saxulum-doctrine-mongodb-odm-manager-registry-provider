@@ -1,0 +1,27 @@
+{
+    "name": "saxulum/saxulum-doctrine-mongodb-odm-manager-registry-provider",
+    "description": "Doctrine MongoDB ODM Manager Registry Provider",
+    "keywords": ["pimple", "cilex", "silex", "doctrine", "mongodb", "odm", "registrymanager"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dominik Zogg",
+            "email": "dominik.zogg@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "pimple/pimple": "1.*@dev",
+        "saxulum/saxulum-doctrine-mongodb-odm-provider": "~1.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "suggest": {
+        "symfony/form": ">=2.2,<3.0"
+    },
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-0": { "Saxulum\\DoctrineMongodbOdmManagerRegistry": "src/" }
+    }
+}
