@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "pimple/pimple": "1.*@dev",
+        "pimple/pimple": "~1.0",
         "saxulum/saxulum-doctrine-mongodb-odm-provider": "~1.0.0"
     },
     "require-dev": {
