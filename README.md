@@ -119,7 +119,7 @@ class Sample
 
 ### Symfony Console
 
-If you like to use [Symfony Console][7] commands, install [Symfony Console][7] and the [Saxulum Console Provider][8] and register the console provider.
+If you like to use [Doctrine MongoDB ODM Commands][7] commands, install [Doctrine MongoDB ODM Commands][7] and the [Saxulum Console Provider][8] and register the console provider.
 
 ```{.json}
 {
