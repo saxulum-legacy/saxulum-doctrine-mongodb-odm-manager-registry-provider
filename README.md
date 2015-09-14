@@ -125,7 +125,7 @@ If you like to use [Doctrine MongoDB ODM Commands][7], install [Doctrine MongoDB
 {
     "require": {
         "saxulum/saxulum-doctrine-mongodb-odm-commands": "dev-master@dev",
-        "saxulum/saxulum-console": "~2.0",
+        "saxulum/saxulum-console": "~2.2",
     }
 }
 ```
