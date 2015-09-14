@@ -15,7 +15,7 @@ Requirements
 ------------
 
  * PHP 5.3+
- * Doctrine ~2.3
+ * Doctrine MongoDB ODM ~1.0
  
 Currently requires both **mongodbs** and **mongodbodm.dms** services in order to work.
 These can be provided by a [Doctrine MongoDB Service Provider][1] and the [Doctrine MongoDB ODM Service Provider][2] service providers.
