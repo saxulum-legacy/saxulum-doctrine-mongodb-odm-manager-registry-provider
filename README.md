@@ -10,7 +10,7 @@ Features
 --------
 
  * Leverages the core [Doctrine MongoDB Service Provider][1] for either Silex or Cilex and the [Doctrine MongoDB ODM Service Provider][2]
- * The Registry manager registry can the used with the [Doctrine Bridge][4] from symfony, to use entity type in the [Symfony Form Component][5] 
+ * The Registry manager registry can the used with the [Doctrine Bridge][4] from symfony, to use document type in the [Symfony Form Component][5] 
 
 Requirements
 ------------
@@ -39,9 +39,9 @@ use Saxulum\DoctrineMongodbOdmManagerRegistry\Silex\Provider\DoctrineMongodbOdmM
 $app->register(new DoctrineMongodbOdmManagerRegistryProvider());
 ```
 
-### Form Entity Type
+### Form Document Type
 
-If you like to have `Entity` Type Support within [Symfony Form Component][5], install the [Doctrine Bridge][4] and register the form provider first.
+If you like to have `Document` Type Support within [Symfony Form Component][5], install the [Doctrine Bridge][4] and register the form provider first.
 
 ```{.json}
 {
@@ -64,7 +64,7 @@ $app->register(new DoctrineMongodbOdmManagerRegistryProvider());
 
 ### Validator
 
-If you like to have `UniqueEntity` Constraint Support within [Symfony Validator Component][9], install the [Doctrine Bridge][4] and register the validator provider first.
+If you like to have `UniqueDocument` Constraint Support within [Symfony Validator Component][9], install the [Doctrine Bridge][4] and register the validator provider first.
 
 ```{.json}
 {
@@ -89,11 +89,11 @@ $app->register(new DoctrineMongodbOdmManagerRegistryProvider());
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueDocument;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
- * @ORM\Entity()
+ * @ORM\Document()
  * @ORM\Table(name="sample")
  */
 class Sample
@@ -109,7 +109,7 @@ class Sample
      */
     public static function loadValidatorMetadata(ClassMetadata $metadata)
     {
-        $metadata->addConstraint(new UniqueEntity(array(
+        $metadata->addConstraint(new UniqueDocument(array(
             'fields'  => 'name',
             'message' => 'This name already exists.',
         )));
