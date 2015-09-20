@@ -50,6 +50,10 @@ class MongoDBQueryBuilderLoader implements EntityLoaderInterface
         }
 
         if ($queryBuilder instanceof \Closure) {
+            if (!$manager instanceof ObjectManager) {
+                throw new UnexpectedTypeException($manager, 'Doctrine\Common\Persistence\ObjectManager');
+            }
+
             $queryBuilder = $queryBuilder($manager->getRepository($class));
 
             if (!$queryBuilder instanceof Builder) {
