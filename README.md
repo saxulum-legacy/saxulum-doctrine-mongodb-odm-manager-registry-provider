@@ -10,21 +10,21 @@ Features
 --------
 
  * Leverages the core [Doctrine MongoDB Service Provider][1] for either Silex or Cilex and the [Doctrine MongoDB ODM Service Provider][2]
- * The Registry manager registry can the used with the [Doctrine Bridge][4] from symfony, to use document type in the [Symfony Form Component][5] 
+ * The Registry manager registry can the used with the [Doctrine Bridge][4] from symfony, to use document type in the [Symfony Form Component][5]
 
 Requirements
 ------------
 
- * PHP 5.3+
+ * PHP 5.5+
  * Doctrine MongoDB ODM ~1.0
- 
+
 Currently requires both **mongodbs** and **mongodbodm.dms** services in order to work.
 These can be provided by a [Doctrine MongoDB Service Provider][1] and the [Doctrine MongoDB ODM Service Provider][2] service providers.
 If you can or want to fake it, go for it. :)
 
 Installation
 ------------
- 
+
 Through [Composer](http://getcomposer.org) as [saxulum/saxulum-doctrine-mongodb-odm-manager-registry-provider][6].
 
 ```{.sh}
@@ -34,7 +34,7 @@ composer require "saxulum/saxulum-doctrine-mongodb-odm-manager-registry-provider
 ```{.php}
 <?php
 
-use Saxulum\DoctrineMongodbOdmManagerRegistry\Silex\Provider\DoctrineMongodbOdmManagerRegistryProvider;
+use Saxulum\DoctrineMongodbOdmManagerRegistry\Provider\DoctrineMongodbOdmManagerRegistryProvider;
 
 $app->register(new DoctrineMongodbOdmManagerRegistryProvider());
 ```
@@ -46,8 +46,8 @@ If you like to have `Document` Type Support within [Symfony Form Component][5], 
 ```{.json}
 {
     "require": {
-        "symfony/doctrine-bridge": "~2.2",
-        "symfony/form": "~2.2"
+        "symfony/doctrine-bridge": "~2.3|~3.0",
+        "symfony/form": "~2.3|~3.0"
     }
 }
 ```
@@ -55,7 +55,7 @@ If you like to have `Document` Type Support within [Symfony Form Component][5], 
 ```{.php}
 <?php
 
-use Saxulum\DoctrineMongodbOdmManagerRegistry\Silex\Provider\DoctrineMongodbOdmManagerRegistryProvider;
+use Saxulum\DoctrineMongodbOdmManagerRegistry\Provider\DoctrineMongodbOdmManagerRegistryProvider;
 use Silex\Provider\FormServiceProvider;
 
 $app->register(new FormServiceProvider());
@@ -69,8 +69,8 @@ If you like to have `UniqueDocument` Constraint Support within [Symfony Validato
 ```{.json}
 {
     "require": {
-        "symfony/doctrine-bridge": "~2.2",
-        "symfony/validator": "~2.2"
+        "symfony/doctrine-bridge": "~2.3|~3.0",
+        "symfony/validator": "~2.3|~3.0"
     }
 }
 ```
@@ -78,7 +78,7 @@ If you like to have `UniqueDocument` Constraint Support within [Symfony Validato
 ```{.php}
 <?php
 
-use Saxulum\DoctrineMongodbOdmManagerRegistry\Silex\Provider\DoctrineMongodbOdmManagerRegistryProvider;
+use Saxulum\DoctrineMongodbOdmManagerRegistry\Provider\DoctrineMongodbOdmManagerRegistryProvider;
 use Silex\Provider\ValidatorServiceProvider;
 
 $app->register(new ValidatorServiceProvider());
@@ -125,7 +125,7 @@ If you like to use [Doctrine MongoDB ODM Commands][7], install [Doctrine MongoDB
 {
     "require": {
         "saxulum/saxulum-doctrine-mongodb-odm-commands": "dev-master@dev",
-        "saxulum/saxulum-console": "~2.2",
+        "saxulum/saxulum-console": "~2.3|~3.0",
     }
 }
 ```
@@ -133,8 +133,8 @@ If you like to use [Doctrine MongoDB ODM Commands][7], install [Doctrine MongoDB
 ```{.php}
 <?php
 
-use Saxulum\DoctrineMongodbOdmManagerRegistry\Silex\Provider\DoctrineMongodbOdmManagerRegistryProvider;
-use Saxulum\Console\Silex\Provider\ConsoleProvider;
+use Saxulum\DoctrineMongodbOdmManagerRegistry\Provider\DoctrineMongodbOdmManagerRegistryProvider;
+use Saxulum\Console\Provider\ConsoleProvider;
 
 $app->register(new ConsoleProvider());
 $app->register(new DoctrineMongodbOdmManagerRegistryProvider());
@@ -149,7 +149,7 @@ Usage
 // get the default connection name
 $app['doctrine_mongodb']->getDefaultConnectionName();
 
-// get the default connection 
+// get the default connection
 $app['doctrine_mongodb']->getConnection();
 
 // get a connection by name
