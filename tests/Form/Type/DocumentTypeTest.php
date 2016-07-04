@@ -1,10 +1,15 @@
 <?php
 
-namespace Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Form\Type;
+namespace Doctrine\Bundle\MongoDBBundle\Tests\Form\Type;
 
 use Saxulum\DoctrineMongodbOdmManagerRegistry\Form\DoctrineMongoDBExtension;
+use Saxulum\DoctrineMongodbOdmManagerRegistry\Form\Type\DocumentType;
+use Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Document\Category;
+use Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Document\Document;
 use Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\TestCase;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Test\TypeTestCase;
+use Symfony\Component\HttpKernel\Kernel;
 
 class DocumentTypeTest extends TypeTestCase
 {
@@ -18,8 +23,12 @@ class DocumentTypeTest extends TypeTestCase
      */
     private $dmRegistry;
 
+    private $typeFQCN;
+
     public function setUp()
     {
+        $this->typeFQCN = method_exists('\Symfony\Component\Form\AbstractType', 'getBlockPrefix');
+
         $this->dm = TestCase::createTestDocumentManager(array(
             __DIR__ . '/../../Fixtures/Form/Document',
         ));
@@ -28,11 +37,36 @@ class DocumentTypeTest extends TypeTestCase
         parent::setUp();
     }
 
+    protected function tearDown()
+    {
+        $documentClasses = array(
+            'Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Document\Document',
+            'Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Document\Category',
+        );
+
+        foreach ($documentClasses as $class) {
+            $this->dm->getDocumentCollection($class)->drop();
+        }
+
+        parent::tearDown();
+    }
+
+
     public function testDocumentManagerOptionSetsEmOption()
     {
-        $field = $this->factory->createNamed('name', 'document', null, array(
-            'class' => 'Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Document\SampleDocument',
+        $field = $this->factory->createNamed('name', $this->typeFQCN ? DocumentType::CLASS : 'document', null, array(
+            'class' => 'Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Document\Document',
             'document_manager' => 'default',
+        ));
+
+        $this->assertSame($this->dm, $field->getConfig()->getOption('em'));
+    }
+
+    public function testDocumentManagerInstancePassedAsOption()
+    {
+        $field = $this->factory->createNamed('name', $this->typeFQCN ? DocumentType::CLASS : 'document', null, array(
+            'class' => 'Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Document\Document',
+            'document_manager' => $this->dm,
         ));
 
         $this->assertSame($this->dm, $field->getConfig()->getOption('em'));
@@ -43,10 +77,42 @@ class DocumentTypeTest extends TypeTestCase
      */
     public function testSettingDocumentManagerAndEmOptionShouldThrowException()
     {
-        $field = $this->factory->createNamed('name', 'document', null, array(
+        $field = $this->factory->createNamed('name', $this->typeFQCN ? DocumentType::CLASS : 'document', null, array(
             'document_manager' => 'default',
             'em' => 'default',
         ));
+    }
+
+    public function testManyToManyReferences()
+    {
+        $categoryOne = new Category('one');
+        $this->dm->persist($categoryOne);
+        $categoryTwo = new Category('two');
+        $this->dm->persist($categoryTwo);
+
+        $document = new Document(new \MongoId(), 'document');
+        $document->categories[] = $categoryOne;
+        $this->dm->persist($document);
+
+        $this->dm->flush();
+
+        $form = $this->factory->create($this->typeFQCN ? FormType::CLASS : 'form', $document)
+            ->add(
+                'categories', $this->typeFQCN ? DocumentType::CLASS : 'document', array(
+                    'class' => 'Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Document\Category',
+                    'multiple' => true,
+                    'expanded' => true,
+                    'document_manager' => 'default'
+                )
+            );
+
+        $view = $form->createView();
+        $categoryView = $view['categories'];
+        $this->assertInstanceOf('Symfony\Component\Form\FormView', $categoryView);
+
+        $this->assertCount(2, $categoryView->children);
+        $this->assertTrue($categoryView->children[0]->vars['checked']);
+        $this->assertFalse($categoryView->children[1]->vars['checked']);
     }
 
     protected function createRegistryMock($name, $dm)

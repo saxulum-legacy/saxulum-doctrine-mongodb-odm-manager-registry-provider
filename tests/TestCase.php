@@ -35,6 +35,16 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $config->setMetadataDriverImpl(new AnnotationDriver(new AnnotationReader(), $paths));
         $config->setMetadataCacheImpl(new \Doctrine\Common\Cache\ArrayCache());
 
-        return DocumentManager::create(new Connection(), $config);
+        return DocumentManager::create(
+            new Connection(
+//                'mongodb://localhost:27017',
+//                array(
+//                    'username' => 'root',
+//                    'password' => 'root',
+//                    'db' => 'admin'
+//                )
+            ),
+            $config
+        );
     }
 }

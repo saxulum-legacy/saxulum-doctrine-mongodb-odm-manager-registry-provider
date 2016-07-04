@@ -8,7 +8,7 @@ use Pimple\Container;
 use Saxulum\DoctrineMongoDb\Provider\DoctrineMongoDbProvider;
 use Saxulum\DoctrineMongoDbOdm\Provider\DoctrineMongoDbOdmProvider;
 use Saxulum\DoctrineMongodbOdmManagerRegistry\Provider\DoctrineMongodbOdmManagerRegistryProvider;
-use Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Document\SampleDocument;
+use Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Document\Document;
 use Silex\Provider\ValidatorServiceProvider;
 use Symfony\Component\Validator\Validator;
 
@@ -41,8 +41,7 @@ class DoctrineMongodbOdmManagerRegistryProviderTest extends \PHPUnit_Framework_T
 
         $this->createSchema($schemaManager);
 
-        $sampleDocument = new SampleDocument();
-        $sampleDocument->setName('name');
+        $sampleDocument = new Document(new \MongoId(), 'name');
 
         $errors = $validator->validate($sampleDocument);
 
@@ -51,8 +50,7 @@ class DoctrineMongodbOdmManagerRegistryProviderTest extends \PHPUnit_Framework_T
         $dm->persist($sampleDocument);
         $dm->flush();
 
-        $sampleDocument = new SampleDocument();
-        $sampleDocument->setName('name');
+        $sampleDocument = new Document(new \MongoId(), 'name');
 
         $errors = $validator->validate($sampleDocument);
 
@@ -70,11 +68,11 @@ class DoctrineMongodbOdmManagerRegistryProviderTest extends \PHPUnit_Framework_T
         $container->register(new DoctrineMongoDbProvider(), array(
             'mongodb.options' => array(
                 'server' => 'mongodb://localhost:27017',
-//                'options' => array(
-//                    'username' => 'root',
-//                    'password' => 'root',
-//                    'db' => 'admin'
-//                )
+                'options' => array(
+                    'username' => 'root',
+                    'password' => 'root',
+                    'db' => 'admin'
+                )
             )
         ));
         $container->register(new DoctrineMongoDbOdmProvider(), array(
