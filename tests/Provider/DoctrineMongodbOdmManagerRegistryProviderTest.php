@@ -70,11 +70,11 @@ class DoctrineMongodbOdmManagerRegistryProviderTest extends \PHPUnit_Framework_T
         $container->register(new DoctrineMongoDbProvider(), array(
             'mongodb.options' => array(
                 'server' => 'mongodb://localhost:27017',
-                'options' => array(
-                    'username' => 'root',
-                    'password' => 'root',
-                    'db' => 'admin'
-                )
+//                'options' => array(
+//                    'username' => 'root',
+//                    'password' => 'root',
+//                    'db' => 'admin'
+//                )
             )
         ));
         $container->register(new DoctrineMongoDbOdmProvider(), array(
