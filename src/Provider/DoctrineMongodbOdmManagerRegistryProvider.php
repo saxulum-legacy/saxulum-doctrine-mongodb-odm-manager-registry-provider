@@ -2,6 +2,8 @@
 
 namespace Saxulum\DoctrineMongodbOdmManagerRegistry\Provider;
 
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use Saxulum\Console\Console\ConsoleApplication;
 use Saxulum\DoctrineMongodbOdmCommands\Command\ClearMetadataCacheDoctrineODMCommand;
 use Saxulum\DoctrineMongodbOdmCommands\Command\CreateSchemaDoctrineODMCommand;
@@ -17,13 +19,13 @@ use Saxulum\DoctrineMongodbOdmManagerRegistry\Form\DoctrineMongoDBExtension;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator;
 use Symfony\Bridge\Doctrine\Validator\DoctrineInitializer;
 
-class DoctrineMongodbOdmManagerRegistryProvider
+class DoctrineMongodbOdmManagerRegistryProvider implements ServiceProviderInterface
 {
-    public function register(\Pimple $container)
+    public function register(Container $container)
     {
-        $container['doctrine_mongodb'] = $container->share(function ($container) {
+        $container['doctrine_mongodb'] = function ($container) {
             return new ManagerRegistry($container);
-        });
+        };
 
         if (isset($container['form.extensions'])) {
             $container['form.extensions'] = $container->extend('form.extensions', function ($extensions, $container) {

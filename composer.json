@@ -11,25 +11,25 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "pimple/pimple": "~1.0",
-        "saxulum/saxulum-doctrine-mongodb-odm-provider": "~1.3"
+        "pimple/pimple": ">=2.1,<4",
+        "saxulum/saxulum-doctrine-mongodb-odm-provider": "~2.2,>=2.2.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*",
-        "saxulum/saxulum-console": "~2.2",
+        "phpunit/phpunit": "~4.0",
+        "saxulum/saxulum-console": "~3.0",
         "saxulum/saxulum-doctrine-mongodb-odm-commands": "dev-master@dev",
-        "silex/silex": "~1.2",
-        "symfony/doctrine-bridge": "~2.3",
-        "symfony/form": "~2.3",
-        "symfony/validator": "~2.3"
+        "silex/providers": "~2.0",
+        "symfony/doctrine-bridge": "~2.3|~3.0",
+        "symfony/form": "~2.3|~3.0",
+        "symfony/validator": "~2.3|~3.0"
     },
     "suggest": {
-        "saxulum/saxulum-console": "~2.2",
+        "saxulum/saxulum-console": "~3.0",
         "saxulum/saxulum-doctrine-mongodb-odm-commands": "dev-master@dev",
-        "silex/silex": "~1.2",
-        "symfony/doctrine-bridge": "~2.3",
-        "symfony/form": "~2.3",
-        "symfony/validator": "~2.3"
+        "silex/providers": "~2.0",
+        "symfony/doctrine-bridge": "~2.3|~3.0",
+        "symfony/form": "~2.3|~3.0",
+        "symfony/validator": "~2.3|~3.0"
     },
     "autoload": {
         "psr-4": { "Saxulum\\DoctrineMongodbOdmManagerRegistry\\": "src/" }

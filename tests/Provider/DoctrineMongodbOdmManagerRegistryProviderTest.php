@@ -4,11 +4,11 @@ namespace Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Provider;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\SchemaManager;
-use Saxulum\DoctrineMongoDb\Silex\Provider\DoctrineMongoDbProvider;
-use Saxulum\DoctrineMongoDbOdm\Silex\Provider\DoctrineMongoDbOdmProvider;
-use Saxulum\DoctrineMongodbOdmManagerRegistry\Silex\Provider\DoctrineMongodbOdmManagerRegistryProvider;
+use Pimple\Container;
+use Saxulum\DoctrineMongoDb\Provider\DoctrineMongoDbProvider;
+use Saxulum\DoctrineMongoDbOdm\Provider\DoctrineMongoDbOdmProvider;
+use Saxulum\DoctrineMongodbOdmManagerRegistry\Provider\DoctrineMongodbOdmManagerRegistryProvider;
 use Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Document\SampleDocument;
-use Silex\Application;
 use Silex\Provider\ValidatorServiceProvider;
 use Symfony\Component\Validator\Validator;
 
@@ -16,10 +16,10 @@ class DoctrineMongodbOdmManagerRegistryProviderTest extends \PHPUnit_Framework_T
 {
     public function testSchema()
     {
-        $app = $this->createApplication();
+        $container = $this->getContainer();
 
         /** @var DocumentManager $dm */
-        $dm = $app['doctrine_mongodb']->getManager();
+        $dm = $container['doctrine_mongodb']->getManager();
 
         $schemaManager = $this->getSchemaManager($dm);
 
@@ -29,13 +29,13 @@ class DoctrineMongodbOdmManagerRegistryProviderTest extends \PHPUnit_Framework_T
 
     public function testValidator()
     {
-        $app = $this->createApplication();
+        $container = $this->getContainer();
 
         /** @var DocumentManager $dm */
-        $dm = $app['doctrine_mongodb']->getManager();
+        $dm = $container['doctrine_mongodb']->getManager();
 
         /** @var Validator $validator */
-        $validator = $app['validator'];
+        $validator = $container['validator'];
 
         $schemaManager = $this->getSchemaManager($dm);
 
@@ -61,23 +61,23 @@ class DoctrineMongodbOdmManagerRegistryProviderTest extends \PHPUnit_Framework_T
         $this->dropSchema($schemaManager);
     }
 
-    public function createApplication()
+    public function getContainer()
     {
-        $app = new Application();
-        $app['debug'] = true;
+        $container = new Container();
+        $container['debug'] = true;
 
-        $app->register(new ValidatorServiceProvider());
-        $app->register(new DoctrineMongoDbProvider(), array(
+        $container->register(new ValidatorServiceProvider());
+        $container->register(new DoctrineMongoDbProvider(), array(
             'mongodb.options' => array(
                 'server' => 'mongodb://localhost:27017',
-//                'options' => array(
-//                    'username' => 'root',
-//                    'password' => 'root',
-//                    'db' => 'admin'
-//                )
+                'options' => array(
+                    'username' => 'root',
+                    'password' => 'root',
+                    'db' => 'admin'
+                )
             )
         ));
-        $app->register(new DoctrineMongoDbOdmProvider(), array(
+        $container->register(new DoctrineMongoDbOdmProvider(), array(
             "mongodbodm.proxies_dir" => $this->getCacheDir() . '/doctrine/proxies',
             "mongodbodm.hydrator_dir" => $this->getCacheDir() . '/doctrine/hydrator',
             'mongodbodm.dm.options' => array(
@@ -85,15 +85,15 @@ class DoctrineMongodbOdmManagerRegistryProviderTest extends \PHPUnit_Framework_T
                     array(
                         'type' => 'annotation',
                         'namespace' => 'Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Document',
-                        'path' => __DIR__.'/../../Document',
+                        'path' => __DIR__.'/../Document',
                         'use_simple_annotation_reader' => false,
                     )
                 )
             )
         ));
-        $app->register(new DoctrineMongodbOdmManagerRegistryProvider());
+        $container->register(new DoctrineMongodbOdmManagerRegistryProvider());
 
-        return $app;
+        return $container;
     }
 
     /**
@@ -126,7 +126,7 @@ class DoctrineMongodbOdmManagerRegistryProviderTest extends \PHPUnit_Framework_T
      */
     protected function getCacheDir()
     {
-        $cacheDir =  __DIR__ . '/../../cache';
+        $cacheDir =  __DIR__ . '/../cache';
 
         if (!is_dir($cacheDir)) {
             mkdir($cacheDir, 0777, true);

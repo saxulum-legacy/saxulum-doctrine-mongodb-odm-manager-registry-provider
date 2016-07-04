@@ -2,16 +2,17 @@
 
 namespace Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Doctrine;
 
+use Pimple\Container;
 use Saxulum\DoctrineMongodbOdmManagerRegistry\Provider\DoctrineMongodbOdmManagerRegistryProvider;
 
 class ManagerRegistryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @return array
+     * @return Container
      */
     protected function createMockDefaultAppAndDeps()
     {
-        $app = new \Pimple;
+        $container = new Container();
 
         $connection = $this
             ->getMockBuilder('Doctrine\MongoDB\Connection')
@@ -19,11 +20,11 @@ class ManagerRegistryTest extends \PHPUnit_Framework_TestCase
             ->getMock()
         ;
 
-        $app['mongodbs'] = new \Pimple(array(
+        $container['mongodbs'] = new Container(array(
             'default' => $connection,
         ));
 
-        $app['mongodbs.default'] = 'default';
+        $container['mongodbs.default'] = 'default';
 
         $configuration = $this->getMock('Doctrine\ODM\MongoDB\Configuration');
 
@@ -61,32 +62,32 @@ class ManagerRegistryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($metadataFactory))
         ;
 
-        $app['mongodbodm.dms'] = new \Pimple(array(
+        $container['mongodbodm.dms'] = new Container(array(
             'default' => $documentManager,
         ));
 
-        $app['mongodbodm.dms.default'] = 'default';
+        $container['mongodbodm.dms.default'] = 'default';
 
-        return $app;
+        return $container;
     }
 
     public function testRegisterDefaultImplementations()
     {
-        $app = $this->createMockDefaultAppAndDeps();
+        $container = $this->createMockDefaultAppAndDeps();
 
         $doctrineMongoDbOdmManagerRegistryProvider = new DoctrineMongodbOdmManagerRegistryProvider();
-        $doctrineMongoDbOdmManagerRegistryProvider->register($app);
+        $doctrineMongoDbOdmManagerRegistryProvider->register($container);
 
-        $this->assertEquals('default', $app['doctrine_mongodb']->getDefaultConnectionName());
-        $this->assertInstanceOf('Doctrine\MongoDB\Connection', $app['doctrine_mongodb']->getConnection());
-        $this->assertCount(1, $app['doctrine_mongodb']->getConnections());
-        $this->assertCount(1, $app['doctrine_mongodb']->getConnectionNames());
-        $this->assertEquals('default', $app['doctrine_mongodb']->getDefaultManagerName());
-        $this->assertInstanceOf('Doctrine\ODM\MongoDB\DocumentManager', $app['doctrine_mongodb']->getManager());
-        $this->assertCount(1, $app['doctrine_mongodb']->getManagers());
-        $this->assertCount(1, $app['doctrine_mongodb']->getManagerNames());
-        $this->assertEquals($app['doctrine_mongodb']->getAliasNamespace('Test'), 'Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Doctrine\ManagerRegistryTest');
-        $this->assertInstanceOf('Doctrine\Common\Persistence\ObjectRepository', $app['doctrine_mongodb']->getRepository('Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Doctrine\ManagerRegistryTest'));
-        $this->assertInstanceOf('Doctrine\ODM\MongoDB\DocumentManager', $app['doctrine_mongodb']->getManagerForClass('Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Doctrine\ManagerRegistryTest'));
+        $this->assertEquals('default', $container['doctrine_mongodb']->getDefaultConnectionName());
+        $this->assertInstanceOf('Doctrine\MongoDB\Connection', $container['doctrine_mongodb']->getConnection());
+        $this->assertCount(1, $container['doctrine_mongodb']->getConnections());
+        $this->assertCount(1, $container['doctrine_mongodb']->getConnectionNames());
+        $this->assertEquals('default', $container['doctrine_mongodb']->getDefaultManagerName());
+        $this->assertInstanceOf('Doctrine\ODM\MongoDB\DocumentManager', $container['doctrine_mongodb']->getManager());
+        $this->assertCount(1, $container['doctrine_mongodb']->getManagers());
+        $this->assertCount(1, $container['doctrine_mongodb']->getManagerNames());
+        $this->assertEquals($container['doctrine_mongodb']->getAliasNamespace('Test'), 'Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Doctrine\ManagerRegistryTest');
+        $this->assertInstanceOf('Doctrine\Common\Persistence\ObjectRepository', $container['doctrine_mongodb']->getRepository('Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Doctrine\ManagerRegistryTest'));
+        $this->assertInstanceOf('Doctrine\ODM\MongoDB\DocumentManager', $container['doctrine_mongodb']->getManagerForClass('Saxulum\Tests\DoctrineMongodbOdmManagerRegistry\Doctrine\ManagerRegistryTest'));
     }
 }

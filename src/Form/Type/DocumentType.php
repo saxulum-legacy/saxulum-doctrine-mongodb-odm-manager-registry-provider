@@ -14,11 +14,11 @@
 
 namespace Saxulum\DoctrineMongodbOdmManagerRegistry\Form\Type;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Saxulum\DoctrineMongodbOdmManagerRegistry\Form\ChoiceList\MongoDBQueryBuilderLoader;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bridge\Doctrine\Form\Type\DoctrineType;
 use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Form type for a MongoDB document
@@ -41,11 +41,11 @@ class DocumentType extends DoctrineType
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        parent::setDefaultOptions($resolver);
+        parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
             'document_manager' => null,
@@ -63,19 +63,39 @@ class DocumentType extends DoctrineType
                 return $registry->getManagerForClass($options['class']);
             }
 
+            if ($manager instanceof ObjectManager) {
+                return $manager;
+            }
+
             return $registry->getManager($manager);
         };
 
-        $resolver->setNormalizers(array(
-            'em' => $normalizer,
-        ));
+        $resolver->setNormalizer('em', $normalizer);
+
+        $resolver->setAllowedTypes('document_manager', array('null', 'string', 'Doctrine\ODM\MongoDB\DocumentManager'));
     }
 
     /**
-     * @see Symfony\Component\Form\FormTypeInterface::getName()
+     * @inheritdoc
+     *
+     * @internal Symfony 2.8 compatibility
+     *
+     * @return string
+     */
+    public function getBlockPrefix()
+    {
+        return 'document';
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @internal Symfony 2.7 compatibility
+     *
+     * @return string
      */
     public function getName()
     {
-        return 'document';
+        return $this->getBlockPrefix();
     }
 }

@@ -7,11 +7,12 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\MongoDBException;
+use Pimple\Container;
 
 class ManagerRegistry implements ManagerRegistryInterface
 {
     /**
-     * @var \Pimple
+     * @var Container
      */
     protected $container;
 
@@ -41,10 +42,10 @@ class ManagerRegistry implements ManagerRegistryInterface
     protected $proxyInterfaceName;
 
     /**
-     * @param \Pimple $container
+     * @param Container $container
      * @param string  $proxyInterfaceName
      */
-    public function __construct(\Pimple $container, $proxyInterfaceName = 'Doctrine\ODM\MongoDB\Proxy\Proxy')
+    public function __construct(Container $container, $proxyInterfaceName = 'Doctrine\ODM\MongoDB\Proxy\Proxy')
     {
         $this->container = $container;
         $this->proxyInterfaceName = $proxyInterfaceName;
@@ -87,7 +88,7 @@ class ManagerRegistry implements ManagerRegistryInterface
     {
         $this->loadConnections();
 
-        if ($this->connections instanceof \Pimple) {
+        if ($this->connections instanceof Container) {
             $connections = array();
             foreach ($this->getConnectionNames() as $name) {
                 $connections[$name] = $this->connections[$name];
@@ -105,7 +106,7 @@ class ManagerRegistry implements ManagerRegistryInterface
     {
         $this->loadConnections();
 
-        if ($this->connections instanceof \Pimple) {
+        if ($this->connections instanceof Container) {
             return $this->connections->keys();
         } else {
             return array_keys($this->connections);
@@ -157,7 +158,7 @@ class ManagerRegistry implements ManagerRegistryInterface
     {
         $this->loadManagers();
 
-        if ($this->managers instanceof \Pimple) {
+        if ($this->managers instanceof Container) {
             $managers = array();
             foreach ($this->getManagerNames() as $name) {
                 $managers[$name] = $this->managers[$name];
@@ -175,7 +176,7 @@ class ManagerRegistry implements ManagerRegistryInterface
     {
         $this->loadManagers();
 
-        if ($this->managers instanceof \Pimple) {
+        if ($this->managers instanceof Container) {
             return $this->managers->keys();
         } else {
             return array_keys($this->managers);
