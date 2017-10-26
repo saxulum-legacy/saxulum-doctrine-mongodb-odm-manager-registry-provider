@@ -64,7 +64,7 @@ $app->register(new DoctrineMongodbOdmManagerRegistryProvider());
 
 ### Validator
 
-If you like to have `UniqueDocument` Constraint Support within [Symfony Validator Component][9], install the [Doctrine Bridge][4] and register the validator provider first.
+If you like to have `Unique` Constraint Support within [Symfony Validator Component][9], install the [Doctrine Bridge][4] and register the validator provider first.
 
 ```{.json}
 {
