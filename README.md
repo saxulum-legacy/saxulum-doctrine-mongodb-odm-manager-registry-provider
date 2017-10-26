@@ -89,7 +89,7 @@ $app->register(new DoctrineMongodbOdmManagerRegistryProvider());
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueDocument;
+use Saxulum\DoctrineMongodbOdmManagerRegistry\Validator\Constraints\Unique;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
@@ -109,7 +109,7 @@ class Sample
      */
     public static function loadValidatorMetadata(ClassMetadata $metadata)
     {
-        $metadata->addConstraint(new UniqueDocument(array(
+        $metadata->addConstraint(new Unique(array(
             'fields'  => 'name',
             'message' => 'This name already exists.',
         )));
